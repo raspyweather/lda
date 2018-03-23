@@ -17,7 +17,6 @@ function init() {
 
     clearBtn.addEventListener("click", clear, false);
 
-    window.addEventListener("click", canvasClick, false);
     window.addEventListener('resize', scaleCanvas, false);
 
     document.addEventListener('keydown', onKeyDown);
@@ -152,8 +151,7 @@ function mean(a) {
     for (let i = 0; i < n; i++) {
         result = math.add(result, math.matrix([a.toArray()[i]]));
     }
-    const res = math.multiply(1 / n, result);
-    return res;
+    return math.multiply(1 / n, result);
 }
 
 function scalePointsToCanvas(points) {
@@ -180,12 +178,12 @@ function computeLDA() {
     const mu1 = math.transpose(mean(c1));
     const mu2 = math.transpose(mean(c2));
     const pooledCov = math.add(cov(c1), cov(c2));
-    theta = math.multiply(math.inv(pooledCov), math.subtract(mu2, mu1));
-    b = math.multiply(-1, math.transpose(theta), math.add(mu1, mu2), 1 / 2).get([0, 0]);
+    const theta = math.multiply(math.inv(pooledCov), math.subtract(mu2, mu1));
+    const b = math.multiply(-1, math.transpose(theta), math.add(mu1, mu2), 1 / 2).get([0, 0]);
 
     // Draw the result
     drawSeparationLine(theta, b);
-    drawProjectionLine(math.multiply((pooledCov), math.subtract(mu2, mu1)), b);
+    drawProjectionLine(theta, b);
 }
 
 function drawSeparationLine(theta, b) {
@@ -201,7 +199,7 @@ function drawSeparationLine(theta, b) {
 
 }
 
-function drawProjectionLine(thetaTrans, b) {
+function drawProjectionLine(theta, b) {
     // By default draw from x = 0 to canvasWidth
     // If these x values cause y values outside the canvas
     // Then change the x values so the line fits within the canvas
